@@ -1,37 +1,40 @@
-Клонировать репозиторий и перейти в него в командной строке:
+# Асинхронный парсер PEP
+
+## Описание проекта
+
+парсер документов PEP на базе фреймворка Scrapy.
+
+-Сохранение всех PEP статусов Python в файл
+-Сбор статистики о количестве статусов PEP Python и общем количестве
+## Запуск проекта
+
+1. Клонируйте репозиторий с проектом и перейдите в соответствующую директорию:
 
 ```
-git clone 
+git clone <git@github.com:NikolayGerasimov495/scrapy_parser_pep.git>
 ```
 
-```
-cd yacut
-```
-
-Cоздать и активировать виртуальное окружение:
+2. Создайте и активируйте виртуальное окружение:
 
 ```
 python3 -m venv venv
+source venv/bin/activate  # for Mac/Linux
+.venv\Scripts\activate.bat  # for Windows
 ```
 
-* Если у вас Linux/macOS
-
-    ```
-    source venv/bin/activate
-    ```
-
-* Если у вас windows
-
-    ```
-    source venv/scripts/activate
-    ```
-
-Установить зависимости из файла requirements.txt:
+3. Установите зависимости для проекта:
 
 ```
-python3 -m pip install --upgrade pip
-```
-
-```
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
+4. Изучите проект и запустите парсер из командной строки с указанием имени spider:
+
+```
+scrapy crawl pep
+```
+5. Результат смотрите в папке result
+
+
+## Автор
+Николай Герасимов
