@@ -5,10 +5,10 @@ from http import HTTPStatus
 from flask import flash
 
 from . import db
+from .constants import (CHARACTER_SET, CUSTOM_ID_REGEX,
+                        DEFAULT_SHORT_ID_LENGTH, MAX_CUSTOM_ID_LENGTH)
 from .error_handlers import InvalidAPIUsage
 from .models import URLMap
-from .constants import (CUSTOM_ID_REGEX, MAX_CUSTOM_ID_LENGTH,
-                             DEFAULT_SHORT_ID_LENGTH, CHARACTER_SET)
 
 
 def validate_custom_id(custom_id):
