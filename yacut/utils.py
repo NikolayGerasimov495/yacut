@@ -1,39 +1,47 @@
 import random
 import re
-import string
+from http import HTTPStatus
 
 from flask import flash
 
 from . import db
 from .error_handlers import InvalidAPIUsage
 from .models import URLMap
+from .constants import (CUSTOM_ID_REGEX, MAX_CUSTOM_ID_LENGTH,
+                             DEFAULT_SHORT_ID_LENGTH, CHARACTER_SET)
 
 
 def validate_custom_id(custom_id):
     if custom_id:
-        if not re.match(r'^[a-zA-Z0-9]+$', custom_id) or len(custom_id) > 16:
+        if (not re.match(CUSTOM_ID_REGEX, custom_id) or len(custom_id)
+            > MAX_CUSTOM_ID_LENGTH):
             raise InvalidAPIUsage(
                 "Указано недопустимое имя для короткой ссылки",
-                400)
+                HTTPStatus.BAD_REQUEST)
 
         if URLMap.query.filter_by(short=custom_id).first() is not None:
             flash('Предложенный вариант короткой ссылки уже существует.')
             raise InvalidAPIUsage(
                 "Предложенный вариант короткой ссылки уже существует.",
-                400)
+                HTTPStatus.BAD_REQUEST)
 
 
-def get_unique_short_id(existing_ids, length=6):
-    characters = string.ascii_letters + string.digits
+def get_unique_short_id(length=DEFAULT_SHORT_ID_LENGTH):
+    characters = CHARACTER_SET
     while True:
         short_id = ''.join(random.choices(characters, k=length))
-        if short_id not in existing_ids:
+        if not URLMap.query.filter_by(short=short_id).first():
             return short_id
 
 
 def create_short_link(original_url, custom_id=None):
-    existing_ids = {link.short for link in URLMap.query.all()}
-    short_id = custom_id if custom_id else get_unique_short_id(existing_ids)
+    if (custom_id and URLMap.query.filter_by(short=custom_id).first() is
+            not None):
+        raise InvalidAPIUsage(
+            "Предложенный вариант короткой ссылки уже существует.",
+            HTTPStatus.BAD_REQUEST)
+
+    short_id = custom_id if custom_id else get_unique_short_id()
 
     new_link = URLMap(original=original_url, short=short_id)
     db.session.add(new_link)
