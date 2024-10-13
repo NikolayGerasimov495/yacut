@@ -13,8 +13,8 @@ from .models import URLMap
 
 def validate_custom_id(custom_id):
     if custom_id:
-        if (not re.match(CUSTOM_ID_REGEX, custom_id) or len(custom_id)
-            > MAX_CUSTOM_ID_LENGTH):
+        if (not re.match(CUSTOM_ID_REGEX, custom_id) or
+                len(custom_id) > MAX_CUSTOM_ID_LENGTH):
             raise InvalidAPIUsage(
                 "Указано недопустимое имя для короткой ссылки",
                 HTTPStatus.BAD_REQUEST)
